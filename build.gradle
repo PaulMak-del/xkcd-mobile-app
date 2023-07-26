@@ -1,0 +1,83 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    ext {
+        javaCompileVersion = JavaVersion.VERSION_1_8
+        defaultCompileSdkVersion = 33
+        defaultTargetSdkVersion = 33
+        defaultMinSdkVersion = 24
+        jvmTarget = "1_8"
+
+        versions = [
+                coreKtx: "1.8.0",
+                lifecycleRuntime: "2.3.1",
+                compose: "1.5.1",
+                coroutines: '1.7.2',
+                appCompat: "1.4.1",
+                material: '1.9.0',
+                androidGradlePlugin: "7.0.4",
+                kotlin: "1.7.20",
+                hilt: '2.47',
+                moshi: '1.15.0',
+                retrofit: "2.9.0",
+                okhttp: '5.0.0-alpha.11',
+                room: '2.5.2',
+
+                junit: "4.13.2"
+        ]
+        androidx = [
+                core: "androidx.core:core-ktx:${versions.coreKtx}",
+                appCompat: "androidx.appcompat:appcompat:${versions.appCompat}",
+                lifecycleRuntimeKtx: "androidx.lifecycle:lifecycle-runtime-ktx:${versions.lifecycleRuntime}",
+                activityCompose: "androidx.activity:activity-compose:${versions.compose}",
+                composeUi: "androidx.compose.ui:ui:",
+                composeUiGraphics: "androidx.compose.ui:ui-graphics",
+                composeUiToolingPreview: "androidx.compose.ui:ui-tooling-preview",
+                composeMaterial: "androidx.compose.material3:material3",
+                material: "com.google.android.material:material:${versions.material}",
+                hilt: "com.google.dagger:hilt-android:${versions.hilt}",
+                hiltCompiler: "com.google.dagger:hilt-android-compiler:${versions.hilt}",
+        ]
+        compose = [
+
+        ]
+        gradlePlugins = [
+                android: "com.android.tools.build:gradle:${versions.androidGradlePlugin}",
+                kotlin : "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}",
+                hilt   : "com.google.dagger:hilt-android-gradle-plugin:${versions.hilt}"
+        ]
+        kotlinx = [
+                coroutines: "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutines}"
+        ]
+        network = [
+                moshi: "com.squareup.moshi:moshi:${versions.moshi}",
+                moshiKotlin: "com.squareup.moshi:moshi-kotlin:${versions.moshi}",
+                moshiKotlinCodegen: "com.squareup.moshi:moshi-kotlin-codegen:${versions.moshi}",
+                retrofit: "com.squareup.retrofit2:retrofit:${versions.retrofit}",
+                retrofitMoshi: "com.squareup.retrofit2:converter-moshi:${versions.retrofit}",
+                okhttp: "com.squareup.okhttp3:okhttp:${versions.okhttp}",
+        ]
+        db = [
+                roomRuntime: "androidx.room:room-runtime:${versions.room}",
+                roomCompiler: "androidx.room:room-compiler:${versions.room}",
+        ]
+        test = [
+                junit: "junit:junit:${versions.junit}"
+        ]
+    }
+    dependencies {
+        classpath gradlePlugins.android
+        classpath gradlePlugins.kotlin
+        classpath gradlePlugins.hilt
+    }
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+plugins {
+    id 'com.android.application' version '8.0.2' apply false
+    id 'com.android.library' version '8.0.2' apply false
+    id 'org.jetbrains.kotlin.android' version '1.7.20' apply false
+    id("com.google.dagger.hilt.android") version '2.44' apply false
+}

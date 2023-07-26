@@ -1,0 +1,57 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id("com.google.dagger.hilt.android")
+}
+
+android {
+    namespace 'com.example.data_remote'
+    compileSdk defaultCompileSdkVersion
+
+    defaultConfig {
+        minSdk defaultMinSdkVersion
+        targetSdk defaultTargetSdkVersion
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility javaCompileVersion
+        targetCompatibility javaCompileVersion
+    }
+    kotlinOptions {
+        jvmTarget = jvmTarget
+    }
+}
+
+dependencies {
+
+    implementation project(path: ":data-repository")
+    implementation project(path: ":domain")
+    implementation androidx.core
+    implementation androidx.appCompat
+    implementation androidx.material
+    implementation kotlinx.coroutines
+    implementation androidx.hilt
+    implementation network.moshi
+    implementation network.moshiKotlin
+    implementation network.retrofit
+    implementation network.retrofitMoshi
+    implementation network.okhttp
+
+    kapt androidx.hiltCompiler
+    kapt network.moshiKotlinCodegen
+
+    testImplementation test.junit
+
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+}
