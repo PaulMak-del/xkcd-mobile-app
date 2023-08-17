@@ -8,4 +8,10 @@ interface ComicRepository {
     fun getComic(id: Long) : Flow<Comic>
 
     fun getFavoriteComics() : Flow<List<Comic>>
+
+    fun insertComic(comics: List<Comic>)
+
+    fun deleteComic(comic: Comic)
+
+    fun containComic(comicId: Long) : Boolean
 }

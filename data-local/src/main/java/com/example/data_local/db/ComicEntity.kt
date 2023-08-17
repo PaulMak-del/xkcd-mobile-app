@@ -8,7 +8,6 @@ import androidx.room.PrimaryKey
 data class ComicEntity(
     @PrimaryKey @ColumnInfo(name = "id") val id: Long,
     @ColumnInfo(name = "title") val title: String,
-    @ColumnInfo(name = "img") val img: String,
+    @ColumnInfo(name = "img") val imageUrlPath: String,
     @ColumnInfo(name = "alt") val alt: String,
-    @ColumnInfo(name = "isFavorite") val isFavorite: Boolean,
 )

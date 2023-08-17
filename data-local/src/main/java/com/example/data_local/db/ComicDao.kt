@@ -1,9 +1,9 @@
 package com.example.data_local.db
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import com.example.domain.entity.Comic
 
 @Dao
 interface ComicDao {
@@ -19,4 +19,7 @@ interface ComicDao {
 
     @Insert
     fun insertComic(comics: List<ComicEntity>)
+
+    @Delete
+    fun deleteComic(comic: ComicEntity)
 }

@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
 }
 
 android {
@@ -51,12 +53,28 @@ dependencies {
     implementation androidx.core
     implementation platform('org.jetbrains.kotlin:kotlin-bom:1.8.0')
     implementation androidx.lifecycleRuntimeKtx
+
+    // Project References
+    implementation project(path: ":data-local")
+    implementation project(path: ":data-remote")
+    implementation project(path: ":data-repository")
+    implementation project(path: ":domain")
+    implementation project(path: ":presentation-common")
+    implementation project(path: ":presentation-comic")
+
+    // Compose
     implementation androidx.activityCompose
     implementation platform('androidx.compose:compose-bom:2022.10.00')
     implementation androidx.composeUi
     implementation androidx.composeUiGraphics
     implementation androidx.composeUiToolingPreview
     implementation androidx.composeMaterial
+    //implementation androidx.navigationCompose
+
+    // Hilt
+    implementation androidx.hilt
+    implementation androidx.hiltNavigationCompose
+    kapt androidx.hiltCompiler
 
     testImplementation test.junit
 

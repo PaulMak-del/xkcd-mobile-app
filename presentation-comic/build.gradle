@@ -1,11 +1,12 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
 }
 
 android {
-    namespace 'com.example.presentation_common'
-    compileSdk defaultCompileSdkVersion
+    namespace 'com.example.presentation_comic'
+    compileSdk 33
 
     defaultConfig {
         minSdk defaultMinSdkVersion
@@ -31,6 +32,9 @@ android {
     buildFeatures {
         compose true
     }
+    buildFeatures {
+        compose true
+    }
     composeOptions {
         kotlinCompilerExtensionVersion '1.3.2'
     }
@@ -45,17 +49,32 @@ dependencies {
 
     implementation androidx.core
     //implementation androidx.appCompat
-    //implementation androidx.material
+    //implementation androidx.lifecycleRuntimeKtx
 
-    // Project references
+    // Modules
     implementation project(path: ":domain")
+    implementation project(path: ":presentation-common")
+
+    // Hilt
+    implementation androidx.hilt
+    kapt androidx.hiltCompiler
 
     // Compose
-    implementation androidx.navigationCompose
+    implementation androidx.activityCompose
+    implementation androidx.composeUi
+    //implementation androidx.composeUiGraphics
+    //implementation androidx.composeUiToolingPreview
     implementation androidx.composeMaterial
+    implementation androidx.composeMaterialIconsExtended
 
-    testImplementation test.junit
+    // Coil
+    //implementation androidx.coil
+
+    testImplementation 'junit:junit:4.13.2'
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    debugImplementation 'androidx.compose.ui:ui-tooling'
+    debugImplementation 'androidx.compose.ui:ui-test-manifest'
 }

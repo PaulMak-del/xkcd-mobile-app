@@ -7,9 +7,9 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class GetComicUseCase @Inject constructor(
-    configuration: Configuration,
+    //configuration: Configuration,
     private val comicRepository: ComicRepository,
-) : UseCase<GetComicUseCase.Request, GetComicUseCase.Response>(configuration) {
+) : UseCase<GetComicUseCase.Request, GetComicUseCase.Response>() {
 
     override fun process(request: GetComicUseCase.Request): Flow<GetComicUseCase.Response> =
         comicRepository.getComic(request.comicId)

@@ -18,4 +18,10 @@ class ComicRepositoryImpl @Inject constructor(
 
     override fun getFavoriteComics(): Flow<List<Comic>> =
         localComicDataSource.getFavoriteComics()
+
+    override fun insertComic(comics: List<Comic>) = localComicDataSource.insertComics(comics)
+
+    override fun deleteComic(comic: Comic) = localComicDataSource.deleteComic(comic)
+
+    override fun containComic(comicId: Long): Boolean = localComicDataSource.containComic(comicId)
 }

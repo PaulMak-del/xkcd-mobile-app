@@ -13,4 +13,6 @@ interface LocalComicDataSource {
     fun containComic(id: Long) : Boolean
 
     fun insertComics(comics: List<Comic>)
+
+    fun deleteComic(comic: Comic)
 }

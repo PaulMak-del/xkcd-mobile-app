@@ -4,19 +4,21 @@ import kotlinx.coroutines.flow.map
 import com.example.domain.entity.Result
 import com.example.domain.entity.UseCaseException
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.catch
+import javax.inject.Inject
 
 abstract class UseCase<I: UseCase.Request, O: UseCase.Response>(
-    private val configuration: Configuration
+    //private val configuration: Configuration
 ) {
 
     fun execute(request: I) = process(request)
         .map {
             Result.Success(it) as Result<O>
         }
-        .flowOn(configuration.dispatcher)
+        .flowOn(Dispatchers.IO)
         .catch {
             emit(Result.Error(UseCaseException.createFromThrowable(it)))
         }

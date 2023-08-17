@@ -34,20 +34,27 @@ class LocalComicDataSourceImpl(
             ComicEntity(
                 it.id,
                 it.title,
-                it.img,
+                it.imageUrlPath,
                 it.alt,
-                it.isFavorite
             )
         })
     }
 
+    override fun deleteComic(comic: Comic) = comicDao.deleteComic(
+        ComicEntity(
+            comic.id,
+            comic.title,
+            comic.imageUrlPath,
+            comic.alt,
+        )
+    )
 
     private fun convert(comicEntity: ComicEntity) : Comic =
         Comic(
             comicEntity.id,
             comicEntity.title,
-            comicEntity.img,
+            comicEntity.imageUrlPath,
             comicEntity.alt,
-            comicEntity.isFavorite
+            true
         )
 }
