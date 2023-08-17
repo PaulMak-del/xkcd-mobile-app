@@ -15,7 +15,7 @@ buildscript {
                 appCompat: "1.4.1",
                 material: '1.9.0',
                 material3: '1.1.1',
-                androidGradlePlugin: "7.0.4",
+                androidGradlePlugin: "8.0.2",
                 kotlin: "1.7.20",
                 hilt: '2.47',
                 moshi: '1.15.0',
@@ -76,7 +76,7 @@ buildscript {
         implementation.exclude group: 'com.intellij', module: 'annotations'
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:8.0.0"
+        classpath gradlePlugins.android
         classpath gradlePlugins.kotlin
         classpath gradlePlugins.hilt
     }
