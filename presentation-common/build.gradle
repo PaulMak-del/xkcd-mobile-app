@@ -54,6 +54,7 @@ dependencies {
     implementation project(path: ":domain")
 
     // Compose
+    implementation platform('androidx.compose:compose-bom:2022.10.00')
     implementation androidx.navigationCompose
     implementation androidx.composeMaterial
 

@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class GetComicUseCase @Inject constructor(
-    //configuration: Configuration,
     private val comicRepository: ComicRepository,
 ) : UseCase<GetComicUseCase.Request, GetComicUseCase.Response>() {
 
