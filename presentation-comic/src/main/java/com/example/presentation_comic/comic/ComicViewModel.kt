@@ -1,5 +1,6 @@
 package com.example.presentation_comic.comic
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.usecase.GetComicUseCase
@@ -13,11 +14,13 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import com.example.domain.entity.Comic
+import com.example.domain.usecase.RemoveComicFromFavoriteUseCase
 
 @HiltViewModel
 class ComicViewModel @Inject constructor(
     private val getComicUseCase: GetComicUseCase,
     private val insertComicUseCase: InsertComicUseCase,
+    private val removeComicFromFavoriteUseCase: RemoveComicFromFavoriteUseCase,
     private val comicConverter: ComicConverter
 ) : ViewModel() {
 
@@ -36,10 +39,28 @@ class ComicViewModel @Inject constructor(
         }
     }
 
-    fun addComicToDB(comicModel: ComicModel) {
+    fun addComicToFavorite(comicModel: ComicModel) {
         viewModelScope.launch(Dispatchers.IO) {
             val comic = Comic(comicModel.id, comicModel.title, comicModel.imageUrlPath, comicModel.alt, comicModel.isFavorite)
             insertComicUseCase.execute(InsertComicUseCase.Request(listOf(comic)))
+            Log.d("ddd", "add to DB")
+            loadComic(comicModel.id)
+            Log.d("ddd", "comic update")
+        }
+    }
+
+    fun removeComicFromFavorite(comic: ComicModel) {
+        viewModelScope.launch(Dispatchers.IO) {
+            removeComicFromFavoriteUseCase.execute(Comic(
+                id = comic.id,
+                title = comic.title,
+                imageUrlPath = comic.imageUrlPath,
+                alt = comic.alt,
+                isFavorite = comic.isFavorite
+            ))
+            Log.d("ddd", "remove from DB")
+            loadComic(comic.id)
+            Log.d("ddd", "comic update")
         }
     }
 }

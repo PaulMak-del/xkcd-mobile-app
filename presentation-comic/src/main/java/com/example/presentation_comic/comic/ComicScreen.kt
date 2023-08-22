@@ -1,5 +1,6 @@
 package com.example.presentation_comic.comic
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,6 +23,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.FirstPage
 import androidx.compose.material.icons.filled.LastPage
@@ -33,8 +35,8 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -57,82 +59,128 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
-import com.example.presentation_common.state.CommonScreen
 import com.example.presentation_common.state.UIState
 
 @Composable
 fun ComicScreen(
-    viewModel: ComicViewModel
+    viewModel: ComicViewModel,
 ) {
     var currentComicId by rememberSaveable {
-        mutableStateOf( 1300L )
+        mutableStateOf( 1L )
     }
+
     viewModel.loadComic(currentComicId)
     viewModel.comic.collectAsState().value.let { result ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .padding(16.dp)
-                    .align(Alignment.TopCenter)
-            ) {
-                TopButtons(
-                    //isFavorite = if (result is UIState.Success) result.data.isFavorite else false,
-                    onSearchClick = {
-                        currentComicId = it
-                    },
+        when(result) {
+            is UIState.Loading -> ComicLoadingScreen()
+            is UIState.Error -> ComicErrorScreen()
+            is UIState.Success -> {
+                ComicSuccessScreen(
+                    comicModel = result.data,
+
+                    onSearchClick = { currentComicId = it },
                     onFavoriteClick = {
-                        if (result is UIState.Success) {
-                            //result.data.isFavorite = !result.data.isFavorite
-                            //viewModel.addComicToDB(result.data)
+                        if (result.data.isFavorite) {
+                            viewModel.removeComicFromFavorite(result.data)
+                        } else {
+                            viewModel.addComicToFavorite(result.data)
                         }
                     },
                     onSettingsClick = {},
                     onShareClick = {},
+
+                    onFirstPageClick = { currentComicId = 1 },
+                    onChevronLeftClick = { currentComicId-- },
+                    onShuffleClick = { currentComicId = (Math.random() * 2815 + 1).toLong() },
+                    onChevronRightClick = { currentComicId++ },
+                    onLastPageClick = { currentComicId = 2818 }
                 )
-                Spacer(
-                    modifier = Modifier
-                        .height(16.dp)
-                )
-                CommonScreen(result) { comicModel ->
-                    Comic(
-                        comicModel,
-                        modifier = Modifier
-                            .verticalScroll(rememberScrollState())
-                    )
-                }
             }
-            ComicsNavigationButtons(
+        }
+    }
+}
+
+@Composable
+fun ComicErrorScreen(
+    modifier: Modifier = Modifier
+) {
+    Snackbar(
+        modifier = modifier
+            .padding(32.dp)
+    ) {
+        Text(text = "Error while loading ComicScreen")
+    }
+}
+
+@Composable
+fun ComicLoadingScreen(
+    modifier: Modifier = Modifier
+) {
+    CircularProgressIndicator(
+        modifier = modifier
+            .padding(32.dp)
+    )
+}
+
+@Composable
+fun ComicSuccessScreen(
+    comicModel: ComicModel,
+
+    onSearchClick: (Long) -> Unit = {},
+    onFavoriteClick: () -> Unit = {},
+    onSettingsClick: () -> Unit = {},
+    onShareClick: () -> Unit = {},
+
+    onFirstPageClick: () -> Unit = {},
+    onChevronLeftClick: () -> Unit = {},
+    onShuffleClick: () -> Unit = {},
+    onChevronRightClick: () -> Unit = {},
+    onLastPageClick: () -> Unit = {}
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .padding(16.dp)
+                .align(Alignment.TopCenter)
+        ) {
+            TopButtons(
+                isFavorite = comicModel.isFavorite,
+                onSearchClick = { onSearchClick(comicModel.id) },
+                onFavoriteClick = { onFavoriteClick() },
+                onSettingsClick = { onSettingsClick() },
+                onShareClick = { onShareClick() },
+            )
+            Spacer(
                 modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(16.dp),
-                onFirstPageClick = {
-                    currentComicId = 1
-                },
-                onChevronLeftClick = {
-                    currentComicId--
-                },
-                onShuffleClick = {
-                    currentComicId = (Math.random() * 2815 + 1).toLong()
-                },
-                onChevronRightClick = {
-                    currentComicId++
-                },
-                onLastPageClick = {
-                    currentComicId = 2816
-                }
+                    .height(16.dp)
+            )
+            Comic(
+                comicModel,
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
             )
         }
+        ComicsNavigationButtons(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(16.dp),
+            onFirstPageClick = { onFirstPageClick() },
+            onChevronLeftClick = { onChevronLeftClick() },
+            onShuffleClick = { onShuffleClick() },
+            onChevronRightClick = { onChevronRightClick() },
+            onLastPageClick = { onLastPageClick() }
+        )
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopButtons(
-    //isFavorite: Boolean,
+    isFavorite: Boolean,
     modifier: Modifier = Modifier,
     onFavoriteClick: () -> Unit = {},
     onShareClick: () -> Unit = {},
@@ -186,11 +234,19 @@ fun TopButtons(
                 onClick = { onFavoriteClick() },
                 modifier = mod
             ) {
-                Icon(
-                    imageVector = Icons.Default.FavoriteBorder,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onBackground,
-                )
+                if (isFavorite) {
+                    Icon(
+                        imageVector = Icons.Default.Favorite,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onBackground,
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Default.FavoriteBorder,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onBackground,
+                    )
+                }
             }
             IconButton(
                 onClick = { onShareClick() },
@@ -346,7 +402,7 @@ fun ComicScreenPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             Column {
-                TopButtons()
+                TopButtons(false)
                 Comic(ComicModel(12, "title", "https://imgs.xkcd.com/comics/babies.png", "alt", false))
                 ComicsNavigationButtons()
             }
@@ -360,7 +416,7 @@ fun TopButtonsPreview() {
         modifier = Modifier,
         color = MaterialTheme.colorScheme.background
     ) {
-        TopButtons()
+        TopButtons(true)
     }
 }
 
