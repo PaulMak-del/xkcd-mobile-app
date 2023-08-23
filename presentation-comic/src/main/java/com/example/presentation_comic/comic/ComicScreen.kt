@@ -1,6 +1,5 @@
 package com.example.presentation_comic.comic
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -65,50 +65,52 @@ import com.example.presentation_common.state.UIState
 fun ComicScreen(
     viewModel: ComicViewModel,
 ) {
-    var currentComicId by rememberSaveable {
-        mutableStateOf( 1L )
-    }
+        var currentComicId by rememberSaveable {
+            mutableStateOf(1L)
+        }
 
-    viewModel.loadComic(currentComicId)
-    viewModel.comic.collectAsState().value.let { result ->
-        when(result) {
-            is UIState.Loading -> ComicLoadingScreen()
-            is UIState.Error -> ComicErrorScreen()
-            is UIState.Success -> {
-                ComicSuccessScreen(
-                    comicModel = result.data,
+        viewModel.loadComic(currentComicId)
+        viewModel.comic.collectAsState().value.let { result ->
+            when (result) {
+                is UIState.Loading -> ComicLoadingScreen()
+                is UIState.Error -> ComicErrorScreen()
+                is UIState.Success -> {
+                    ComicSuccessScreen(
+                        comicModel = result.data,
 
-                    onSearchClick = { currentComicId = it },
-                    onFavoriteClick = {
-                        if (result.data.isFavorite) {
-                            viewModel.removeComicFromFavorite(result.data)
-                        } else {
-                            viewModel.addComicToFavorite(result.data)
-                        }
-                    },
-                    onSettingsClick = {},
-                    onShareClick = {},
+                        onSearchClick = { currentComicId = it },
+                        onFavoriteClick = {
+                            if (result.data.isFavorite) {
+                                viewModel.removeComicFromFavorite(result.data)
+                            } else {
+                                viewModel.addComicToFavorite(result.data)
+                            }
+                        },
+                        onSettingsClick = {},
+                        onShareClick = {},
 
-                    onFirstPageClick = { currentComicId = 1 },
-                    onChevronLeftClick = { currentComicId-- },
-                    onShuffleClick = { currentComicId = (Math.random() * 2815 + 1).toLong() },
-                    onChevronRightClick = { currentComicId++ },
-                    onLastPageClick = { currentComicId = 2818 }
-                )
+                        onFirstPageClick = { currentComicId = 1 },
+                        onChevronLeftClick = { if (currentComicId > 1) currentComicId-- },
+                        onShuffleClick = { currentComicId = (Math.random() * 2815 + 1).toLong() },
+                        onChevronRightClick = { if (currentComicId < 2818) currentComicId++ },
+                        onLastPageClick = { currentComicId = 2818 }
+                    )
+                }
             }
         }
-    }
 }
 
 @Composable
 fun ComicErrorScreen(
     modifier: Modifier = Modifier
 ) {
-    Snackbar(
-        modifier = modifier
-            .padding(32.dp)
-    ) {
-        Text(text = "Error while loading ComicScreen")
+    Column(modifier = modifier) {
+        Snackbar(
+            modifier = modifier
+                .padding(32.dp)
+        ) {
+            Text(text = "Error while loading Comic\nMaybe there is no such comic or your internet connection is not stable")
+        }
     }
 }
 
@@ -119,12 +121,14 @@ fun ComicLoadingScreen(
     CircularProgressIndicator(
         modifier = modifier
             .padding(32.dp)
+            .fillMaxWidth()
     )
 }
 
 @Composable
 fun ComicSuccessScreen(
     comicModel: ComicModel,
+    modifier: Modifier = Modifier,
 
     onSearchClick: (Long) -> Unit = {},
     onFavoriteClick: () -> Unit = {},
@@ -138,7 +142,7 @@ fun ComicSuccessScreen(
     onLastPageClick: () -> Unit = {}
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
     ) {
         Column(
@@ -149,7 +153,7 @@ fun ComicSuccessScreen(
         ) {
             TopButtons(
                 isFavorite = comicModel.isFavorite,
-                onSearchClick = { onSearchClick(comicModel.id) },
+                onSearchClick = onSearchClick,
                 onFavoriteClick = { onFavoriteClick() },
                 onSettingsClick = { onSettingsClick() },
                 onShareClick = { onShareClick() },
@@ -370,8 +374,10 @@ fun Comic(
         SubcomposeAsyncImage(
             model = comicModel.imageUrlPath,
             loading = {
-                CircularProgressIndicator(modifier = Modifier
-                    .size(64.dp)
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .wrapContentSize()
                 )
                       },
             contentDescription = null,
