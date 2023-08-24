@@ -1,8 +1,6 @@
 package com.example.presentation_comic.comic_preview
 
 import android.content.Context
-import android.content.Intent
-import android.graphics.Bitmap
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,17 +31,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.graphics.drawable.toBitmap
 import coil.compose.SubcomposeAsyncImage
-import coil.request.ImageRequest
 import com.example.presentation_comic.comic.ComicModel
-import com.example.presentation_comic.comic.ComicViewModel
 import com.example.presentation_common.state.UIState
 
 
 @Composable
 fun ComicShow(
-    viewModel: ComicViewModel,
+    viewModel: ComicShowViewModel,
     comicId: Long,
     context: Context,
 ) {
@@ -62,24 +57,7 @@ fun ComicShow(
                     }
                 },
                 onShareClick = {
-                    // TODO: Save image and after share with it:
-                    //       https://stackoverflow.com/questions/33222918/sharing-bitmap-via-android-intent
-                    var imageBitmap: Bitmap? = null
-                    ImageRequest.Builder(context)
-                        .data(result.data.imageUrlPath)
-                        .target(
-                            onSuccess = { image ->
-                                imageBitmap = image.toBitmap()
-                            }
-                        )
-
-                    val shareIntent = Intent().apply {
-                        action = Intent.ACTION_SEND
-                        putExtra(Intent.EXTRA_STREAM, imageBitmap)
-                        type = "image/png"
-                               }
-
-                    context.startActivity(Intent.createChooser(shareIntent, null), null)
+                    viewModel.shareComicByUrl(context, result.data.imageUrlPath)
                 },
                 modifier = Modifier
                     .verticalScroll(rememberScrollState())
@@ -184,3 +162,6 @@ fun ScreenPreview() {
         ComicShowScreen(comicModel = ComicModel(1, "", "", "", true))
     }
 }
+
+
+

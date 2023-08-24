@@ -1,11 +1,16 @@
-package com.example.presentation_comic.comic
+package com.example.presentation_comic.comic_preview
 
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.domain.entity.Comic
 import com.example.domain.usecase.GetComicUseCase
 import com.example.domain.usecase.InsertComicUseCase
+import com.example.domain.usecase.RemoveComicFromFavoriteUseCase
+import com.example.presentation_comic.ShareImageFromUrl
+import com.example.presentation_comic.comic.ComicConverter
+import com.example.presentation_comic.comic.ComicModel
 import com.example.presentation_common.state.UIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -14,12 +19,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import com.example.domain.entity.Comic
-import com.example.domain.usecase.RemoveComicFromFavoriteUseCase
-import com.example.presentation_comic.ShareImageFromUrl
+
 
 @HiltViewModel
-class ComicViewModel @Inject constructor(
+class ComicShowViewModel @Inject constructor(
     private val getComicUseCase: GetComicUseCase,
     private val insertComicUseCase: InsertComicUseCase,
     private val removeComicFromFavoriteUseCase: RemoveComicFromFavoriteUseCase,
@@ -39,6 +42,12 @@ class ComicViewModel @Inject constructor(
                 .collect {
                     _comic.value = it
                 }
+        }
+    }
+
+    fun shareComicByUrl(context: Context, imageUrlPath: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            shareImageFromUrl.share(context, imageUrlPath)
         }
     }
 
@@ -64,12 +73,6 @@ class ComicViewModel @Inject constructor(
             Log.d("ddd", "remove from DB")
             loadComic(comic.id)
             Log.d("ddd", "comic update")
-        }
-    }
-
-    fun shareComicByUrl(context: Context, imageUrlPath: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            shareImageFromUrl.share(context, imageUrlPath)
         }
     }
 }

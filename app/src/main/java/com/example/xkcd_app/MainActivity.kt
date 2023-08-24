@@ -114,6 +114,7 @@ fun MyApp(
             ) {
                 ComicScreen(
                     viewModel = hiltViewModel(),
+                    context = context,
                 )
             }
             composable(

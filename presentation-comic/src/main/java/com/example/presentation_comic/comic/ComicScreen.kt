@@ -1,5 +1,6 @@
 package com.example.presentation_comic.comic
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -64,6 +65,7 @@ import com.example.presentation_common.state.UIState
 @Composable
 fun ComicScreen(
     viewModel: ComicViewModel,
+    context: Context,
 ) {
         var currentComicId by rememberSaveable {
             mutableStateOf(1L)
@@ -87,7 +89,7 @@ fun ComicScreen(
                             }
                         },
                         onSettingsClick = {},
-                        onShareClick = {},
+                        onShareClick = { viewModel.shareComicByUrl(context, result.data.imageUrlPath)},
 
                         onFirstPageClick = { currentComicId = 1 },
                         onChevronLeftClick = { if (currentComicId > 1) currentComicId-- },
