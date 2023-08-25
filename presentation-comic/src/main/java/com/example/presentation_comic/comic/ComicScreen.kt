@@ -183,7 +183,7 @@ fun ComicSuccessScreen(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .padding(16.dp)
+                .padding(8.dp)
                 .align(Alignment.TopCenter)
         ) {
             TopButtons(
@@ -195,7 +195,7 @@ fun ComicSuccessScreen(
             )
             Spacer(
                 modifier = Modifier
-                    .height(16.dp)
+                    .height(8.dp)
             )
             Comic(
                 comicModel,

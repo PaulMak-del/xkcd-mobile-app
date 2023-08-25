@@ -56,11 +56,16 @@ class ShareImageFromUrl @Inject constructor() {
      * @param uri Uri of image to share.
      */
     private fun shareImageUri(context: Context, uri: Uri) {
-        val intent = Intent(Intent.ACTION_SEND)
-        intent.putExtra(Intent.EXTRA_STREAM, uri)
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        intent.type = "image/png"
-        context.startActivity(intent)
+        val share = Intent.createChooser(Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TITLE, "Content preview")
+            //putExtra(Intent.EXTRA_TEXT, "https://github.com/PaulMak-del/xkcd-mobile-app") // Change later
+            putExtra(Intent.EXTRA_STREAM, uri)
+            flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+            data = uri
+        }, null)
+
+        context.startActivity(share)
     }
 
     private suspend fun getBitmapFromUrl(context: Context, imageUrlPath: String) : Bitmap? {
