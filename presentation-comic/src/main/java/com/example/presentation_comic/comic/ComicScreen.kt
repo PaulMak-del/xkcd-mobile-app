@@ -67,39 +67,68 @@ fun ComicScreen(
     viewModel: ComicViewModel,
     context: Context,
 ) {
-        var currentComicId by rememberSaveable {
-            mutableStateOf(1L)
-        }
+    viewModel.preloadComic()
 
-        viewModel.loadComic(currentComicId)
-        viewModel.comic.collectAsState().value.let { result ->
-            when (result) {
-                is UIState.Loading -> ComicLoadingScreen()
-                is UIState.Error -> ComicErrorScreen()
-                is UIState.Success -> {
-                    ComicSuccessScreen(
-                        comicModel = result.data,
+    // How can I observe this?
+    var currentComicId by rememberSaveable {
+        mutableStateOf(viewModel.lastComicNumber.value)
+    }
+    viewModel.lastComicNumber.collectAsState().value.let {
+        currentComicId = it
+    }
 
-                        onSearchClick = { currentComicId = it },
-                        onFavoriteClick = {
-                            if (result.data.isFavorite) {
-                                viewModel.removeComicFromFavorite(result.data)
-                            } else {
-                                viewModel.addComicToFavorite(result.data)
-                            }
-                        },
-                        onSettingsClick = {},
-                        onShareClick = { viewModel.shareComicByUrl(context, result.data.imageUrlPath)},
+    viewModel.comic.collectAsState().value.let { result ->
+        when (result) {
+            is UIState.Loading -> ComicLoadingScreen()
+            is UIState.Error -> ComicErrorScreen()
+            is UIState.Success -> {
+                ComicSuccessScreen(
+                    comicModel = result.data,
 
-                        onFirstPageClick = { currentComicId = 1 },
-                        onChevronLeftClick = { if (currentComicId > 1) currentComicId-- },
-                        onShuffleClick = { currentComicId = (Math.random() * 2815 + 1).toLong() },
-                        onChevronRightClick = { if (currentComicId < 2818) currentComicId++ },
-                        onLastPageClick = { currentComicId = 2818 }
-                    )
-                }
+                    onSearchClick = {
+                        currentComicId = it
+                        viewModel.setLastComicNumber(currentComicId)
+                        viewModel.loadComic(currentComicId)
+                                    },
+                    onFavoriteClick = {
+                        if (result.data.isFavorite) {
+                            viewModel.removeComicFromFavorite(result.data)
+                        } else {
+                            viewModel.addComicToFavorite(result.data)
+                        }
+                    },
+                    onSettingsClick = {},
+                    onShareClick = { viewModel.shareComicByUrl(context, result.data.imageUrlPath)},
+
+                    onFirstPageClick = {
+                        currentComicId = 1
+                        viewModel.setLastComicNumber(currentComicId)
+                        viewModel.loadComic(currentComicId)
+                                       },
+                    onChevronLeftClick = {
+                        if (currentComicId > 1) currentComicId--
+                        viewModel.setLastComicNumber(currentComicId)
+                        viewModel.loadComic(currentComicId)
+                                         },
+                    onShuffleClick = {
+                        currentComicId = (Math.random() * 2815 + 1).toLong()
+                        viewModel.setLastComicNumber(currentComicId)
+                        viewModel.loadComic(currentComicId)
+                                     },
+                    onChevronRightClick = {
+                        if (currentComicId < 2818) currentComicId++
+                        viewModel.setLastComicNumber(currentComicId)
+                        viewModel.loadComic(currentComicId)
+                                          },
+                    onLastPageClick = {
+                        currentComicId = 2818
+                        viewModel.setLastComicNumber(currentComicId)
+                        viewModel.loadComic(currentComicId)
+                    }
+                )
             }
         }
+    }
 }
 
 @Composable
@@ -120,11 +149,15 @@ fun ComicErrorScreen(
 fun ComicLoadingScreen(
     modifier: Modifier = Modifier
 ) {
-    CircularProgressIndicator(
-        modifier = modifier
-            .padding(32.dp)
-            .fillMaxWidth()
-    )
+    Box(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        CircularProgressIndicator(
+            modifier = modifier
+                .padding(32.dp)
+                .align(Alignment.Center)
+        )
+    }
 }
 
 @Composable

@@ -27,7 +27,8 @@ buildscript {
                 hiltNavigationCompose: '1.0.0-rc01',
                 junit: "4.13.2",
                 coil: "2.4.0",
-                composeUiToolingPreview: '1.0.0-rc01'
+                composeUiToolingPreview: '1.0.0-rc01',
+                dataStore: "1.0.0",
         ]
         androidx = [
                 core: "androidx.core:core-ktx:${versions.coreKtx}",
@@ -46,7 +47,8 @@ buildscript {
                 viewModelCompose: "androidx.lifecycle:lifecycle-viewmodel-compose:${versions.viewModel}",
                 navigationCompose: "androidx.navigation:navigation-compose:${versions.navigationCompose}",
                 hiltNavigationCompose: "androidx.hilt:hilt-navigation-compose:${versions.hiltNavigationCompose}",
-                coil: "io.coil-kt:coil-compose:${versions.coil}"
+                coil: "io.coil-kt:coil-compose:${versions.coil}",
+                dataStore: "androidx.datastore:datastore-preferences:${versions.dataStore}"
         ]
         gradlePlugins = [
                 android: "com.android.tools.build:gradle:${versions.androidGradlePlugin}",

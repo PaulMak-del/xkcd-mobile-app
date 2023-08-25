@@ -2,7 +2,6 @@ package com.example.xkcd_app
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
@@ -67,9 +66,6 @@ fun MyApp(
     val currentBackStack by navController.currentBackStackEntryAsState()
     val currentDestination = currentBackStack?.destination
     val currentScreen = allScreens.find { it.route == currentDestination?.route } ?: NavRoutes.Comic
-
-    Log.d("ddd", "routes: ${allScreens.map{ it.route }}")
-    Log.d("ddd", "route: {${currentScreen.route}}")
 
     Scaffold(
         topBar = {

@@ -47,6 +47,9 @@ dependencies {
     implementation db.roomRuntime
     implementation db.roomCompiler
 
+    // DataStore
+    implementation androidx.dataStore
+
     kapt androidx.hiltCompiler
     kapt db.roomCompiler
 

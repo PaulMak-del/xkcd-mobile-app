@@ -8,7 +8,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.catch
-import javax.inject.Inject
 
 abstract class UseCase<I: UseCase.Request, O: UseCase.Response>(
     //private val configuration: Configuration
