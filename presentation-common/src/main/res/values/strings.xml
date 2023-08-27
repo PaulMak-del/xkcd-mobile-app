@@ -2,4 +2,6 @@
 <resources>
     <string name="comic_screen_title">Comics</string>
     <string name="favorite_comics_screen_title">Favorite</string>
+    <string name="settings_screen_title">Settings</string>
+    <string name="comic_preview_screen_title">Comic</string>
 </resources>

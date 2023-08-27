@@ -1,9 +1,6 @@
 package com.example.data_local.injection
 
 import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
 import com.example.data_local.AppDatabase
 import com.example.data_local.db.ComicDao
@@ -13,7 +10,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "last_comic")
 
 @Module
 @InstallIn(SingletonComponent::class)

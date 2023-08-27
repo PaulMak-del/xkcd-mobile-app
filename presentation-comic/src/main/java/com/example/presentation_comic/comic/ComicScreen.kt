@@ -66,6 +66,7 @@ import com.example.presentation_common.state.UIState
 fun ComicScreen(
     viewModel: ComicViewModel,
     context: Context,
+    onSettingsClick: () -> Unit = {},
 ) {
     viewModel.preloadComic()
 
@@ -97,7 +98,7 @@ fun ComicScreen(
                             viewModel.addComicToFavorite(result.data)
                         }
                     },
-                    onSettingsClick = {},
+                    onSettingsClick = { onSettingsClick() },
                     onShareClick = { viewModel.shareComicByUrl(context, result.data.imageUrlPath)},
 
                     onFirstPageClick = {

@@ -1,7 +1,9 @@
 package com.example.data_repository.injection
 
+import com.example.data_repository.repository.AppThemeRepositoryImpl
 import com.example.data_repository.repository.ComicRepositoryImpl
 import com.example.data_repository.repository.LastComicNumberRepositoryImpl
+import com.example.domain.repository.AppThemeRepository
 import com.example.domain.repository.ComicRepository
 import com.example.domain.repository.LastComicNumberRepository
 import dagger.Binds
@@ -18,4 +20,7 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindLastComicNumberRepository(lastComicNumberRepositoryImpl: LastComicNumberRepositoryImpl) : LastComicNumberRepository
+
+    @Binds
+    abstract fun bindAppThemeRepository(appThemeRepositoryImpl: AppThemeRepositoryImpl) : AppThemeRepository
 }
