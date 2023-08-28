@@ -43,6 +43,9 @@ dependencies {
     implementation kotlinx.coroutines
     implementation androidx.hilt
 
+    // Retrofit2
+    implementation network.retrofit
+
     kapt androidx.hiltCompiler
 
     testImplementation test.junit

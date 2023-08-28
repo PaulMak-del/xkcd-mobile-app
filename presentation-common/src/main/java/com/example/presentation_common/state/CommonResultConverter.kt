@@ -12,6 +12,12 @@ abstract class CommonResultConverter<T: Any, R: Any> {
             is Result.Success -> {
                 UIState.Success(convertSuccess(result.data))
             }
+            is Result.UnknownHostError -> {
+                UIState.UnknownHostError(result.exception.localizedMessage.orEmpty())
+            }
+            is Result.NotFoundError -> {
+                UIState.NotFoundError(result.exception.localizedMessage.orEmpty())
+            }
         }
     }
 

@@ -18,11 +18,43 @@ fun<T: Any> CommonScreen(
         is UIState.Loading -> Loading()
         is UIState.Error -> Error(errorMessage = state.errorMessage)
         is UIState.Success -> onSuccess(state.data)
+        is UIState.NotFoundError -> NotFoundError(errorMessage = state.errorMessage)
+        is UIState.UnknownHostError -> UnknownHostError(errorMessage = state.errorMessage)
     }
 }
 
 @Composable
-fun Error(
+private fun NotFoundError(
+    errorMessage: String,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Bottom
+    ) {
+        Snackbar {
+            Text(text = errorMessage)
+        }
+    }
+}
+
+@Composable
+private fun UnknownHostError(
+    errorMessage: String,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Bottom
+    ) {
+        Snackbar {
+            Text(text = errorMessage)
+        }
+    }
+}
+
+@Composable
+private fun Error(
     errorMessage: String,
     modifier : Modifier = Modifier
 ) {
@@ -37,7 +69,7 @@ fun Error(
 }
 
 @Composable
-fun Loading(
+private fun Loading(
     modifier: Modifier = Modifier
 ) {
     Column(

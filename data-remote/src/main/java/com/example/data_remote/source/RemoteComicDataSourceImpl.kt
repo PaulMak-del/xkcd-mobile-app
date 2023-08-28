@@ -23,8 +23,10 @@ class RemoteComicDataSourceImpl @Inject constructor(
     override fun getComic(id: Long): Flow<Comic> = flow {
         emit(comicService.getComic(id))
     }.map { comicApiModel ->
+        Log.d("ddd", "comicApiModel: {$comicApiModel}")
         convert(comicApiModel)
     }.catch {
+        Log.d("ddd", "ComicException: $it")
         throw UseCaseException.ComicException(it)
     }
 

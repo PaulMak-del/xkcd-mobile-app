@@ -1,5 +1,6 @@
 package com.example.domain.usecase
 
+import android.util.Log
 import com.example.domain.entity.Comic
 import com.example.domain.repository.ComicRepository
 import kotlinx.coroutines.flow.Flow
@@ -13,6 +14,7 @@ class GetComicUseCase @Inject constructor(
     override fun process(request: GetComicUseCase.Request): Flow<GetComicUseCase.Response> =
         comicRepository.getComic(request.comicId)
             .map {
+                Log.d("ddd", "comic: {$it}")
                 Response(it)
             }
 

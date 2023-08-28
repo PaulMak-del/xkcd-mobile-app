@@ -2,6 +2,7 @@ package com.example.presentation_comic.comic
 
 import android.content.Context
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,6 +29,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.FirstPage
 import androidx.compose.material.icons.filled.LastPage
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Share
@@ -81,12 +83,15 @@ fun ComicScreen(
     viewModel.comic.collectAsState().value.let { result ->
         when (result) {
             is UIState.Loading -> ComicLoadingScreen()
-            is UIState.Error -> ComicErrorScreen()
+            is UIState.Error -> ComicErrorScreen(
+                viewModel = viewModel
+            )
             is UIState.Success -> {
                 ComicSuccessScreen(
                     comicModel = result.data,
 
                     onSearchClick = {
+
                         currentComicId = it
                         viewModel.setLastComicNumber(currentComicId)
                         viewModel.loadComic(currentComicId)
@@ -128,21 +133,101 @@ fun ComicScreen(
                     }
                 )
             }
+
+            is UIState.NotFoundError -> NotFoundErrorScreen(viewModel = viewModel)
+            is UIState.UnknownHostError -> UnknownHostErrorScreen(viewModel = viewModel)
         }
     }
 }
 
 @Composable
-fun ComicErrorScreen(
+private fun NotFoundErrorScreen(
+    viewModel: ComicViewModel,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+            .padding(16.dp)
+    ) {
         Snackbar(
             modifier = modifier
-                .padding(32.dp)
+                .padding(16.dp)
+        ) {
+            Text(text = "There is no such comic yet :(")
+        }
+        Icon(
+            imageVector = Icons.Default.Refresh,
+            contentDescription = null,
+            modifier = Modifier
+                .size(32.dp)
+                .clickable {
+                    viewModel.setLastComicNumber(1)
+                    viewModel.loadComic(1)
+                }
+        )
+    }
+}
+
+@Composable
+private fun UnknownHostErrorScreen(
+    viewModel: ComicViewModel,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+            .padding(16.dp)
+    ) {
+        Snackbar(
+            modifier = modifier
+                .padding(16.dp)
+        ) {
+            Text(text = "Connection Lost...")
+        }
+        Icon(
+            imageVector = Icons.Default.Refresh,
+            contentDescription = null,
+            modifier = Modifier
+                .size(32.dp)
+                .clickable {
+                    //viewModel.setLastComicNumber(1)
+                    //viewModel.loadComic(1)
+                    viewModel.preloadComic()
+                }
+        )
+    }
+}
+
+@Composable
+private fun ComicErrorScreen(
+    viewModel: ComicViewModel,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+            .padding(16.dp)
+    ) {
+        Snackbar(
+            modifier = modifier
+                .padding(16.dp)
         ) {
             Text(text = "Error while loading Comic\nMaybe there is no such comic or your internet connection is not stable")
         }
+        Icon(
+            imageVector = Icons.Default.Refresh,
+            contentDescription = null,
+            modifier = Modifier
+                .size(32.dp)
+                .clickable {
+                    viewModel.setLastComicNumber(1)
+                    viewModel.loadComic(1)
+                }
+        )
     }
 }
 
@@ -472,3 +557,4 @@ fun BottomButtonsPreview() {
         ComicsNavigationButtons()
     }
 }
+

@@ -9,7 +9,5 @@ class SettingsViewModel @Inject constructor(
 
 ) : ViewModel() {
 
-    fun getAppTheme() {
-
-    }
+    /* TODO: For future uses */
 }

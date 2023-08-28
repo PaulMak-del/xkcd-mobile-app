@@ -62,6 +62,9 @@ fun ComicShow(
                 modifier = Modifier
                     .verticalScroll(rememberScrollState())
             )
+
+            is UIState.NotFoundError -> TODO()
+            is UIState.UnknownHostError -> TODO()
         }
     }
 }

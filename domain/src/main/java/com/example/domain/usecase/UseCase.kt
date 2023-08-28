@@ -8,6 +8,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.catch
+import retrofit2.HttpException
+import java.net.UnknownHostException
 
 abstract class UseCase<I: UseCase.Request, O: UseCase.Response>(
     //private val configuration: Configuration
@@ -19,7 +21,14 @@ abstract class UseCase<I: UseCase.Request, O: UseCase.Response>(
         }
         .flowOn(Dispatchers.IO)
         .catch {
-            emit(Result.Error(UseCaseException.createFromThrowable(it)))
+            when (it.cause) {
+                is UnknownHostException ->
+                    emit(Result.UnknownHostError(UseCaseException.createFromThrowable(it)))
+                is HttpException ->
+                    emit(Result.NotFoundError(UseCaseException.createFromThrowable(it)))
+                else ->
+                    emit(Result.Error(UseCaseException.createFromThrowable(it)))
+            }
         }
 
     internal abstract fun process(request: I): Flow<O>

@@ -45,6 +45,7 @@ class ComicViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             getLastComicNumberUseCase.execute().collect {
                 _lastComicNumber.value = it
+                Log.d("ddd", "[preloadComic] {data} : comicId = $it")
 
                 getComicUseCase.execute(GetComicUseCase.Request(it))
                     .map { result ->
@@ -52,7 +53,6 @@ class ComicViewModel @Inject constructor(
                     }
                     .collect { uiState ->
                         _comic.value = uiState
-                        //Log.d("ddd", "loadComic: ${_comic.value}")
                         Log.d("ddd", "[preloadComic] {end}")
                     }
             }
